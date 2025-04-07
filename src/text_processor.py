@@ -40,18 +40,58 @@ def write_results(results, output_file):
         return False
 
 def main(input_file="input.txt", output_file="output.txt"):
-    """Main function to process a text file."""
-    text = read_file(input_file)
-    if text:
-        results = process_text(text)
-        if results:
-            success = write_results(results, output_file)
-            if success:
-                print(f"Processing complete. Results written to {output_file}")
-                return True
-    
-    print("Processing failed.")
-    return False
+    """Main function to process a text file interactively."""
+    while True:
+        print("\n--- Text Processor Menu ---")
+        print("1. View file contents")
+        print("2. Edit file contents")
+        print("3. Process file")
+        print("4. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            # View file contents
+            text = read_file(input_file)
+            if text:
+                print("\n--- File Contents ---")
+                print(text)
+            else:
+                print("File is empty or could not be read.")
+
+        elif choice == "2":
+            # Edit file contents
+            print("\n--- Edit File Contents ---")
+            new_content = input("Enter new content for the file: ")
+            try:
+                with open(input_file, 'w') as file:
+                    file.write(new_content)
+                print("File updated successfully.")
+            except Exception as e:
+                print(f"Error updating file: {e}")
+
+        elif choice == "3":
+            # Process file
+            text = read_file(input_file)
+            if text:
+                results = process_text(text)
+                if results:
+                    success = write_results(results, output_file)
+                    if success:
+                        print(f"Processing complete. Results written to {output_file}")
+                    else:
+                        print("Failed to write results to file.")
+                else:
+                    print("Failed to process text.")
+            else:
+                print("File is empty or could not be read.")
+
+        elif choice == "4":
+            # Exit
+            print("Exiting the application.")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":
     main()
