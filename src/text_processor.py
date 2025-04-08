@@ -75,9 +75,6 @@ def interactive_menu(input_file, output_file):
                     print(f"Error updating file: {e}")
             else:
                 print("Changes discarded. Original file content remains unchanged.")
-                # Restore the original content
-                with open(input_file, 'w') as file:
-                    file.write(read_file(input_file))
 
         elif choice == "3":
             text = read_file(input_file)
@@ -111,10 +108,15 @@ def interactive_menu(input_file, output_file):
 
 def main(input_file="input.txt", output_file="output.txt"):
     """Main function to run in interactive or non-interactive mode."""
-    if sys.stdin.isatty():
+    try:
+        mode = input("Do you want to run in interactive mode? (yes/no): ").strip().lower()
+    except EOFError:
+        print("No input stream available. Running in non-interactive mode.")
+        mode = "no"
+
+    if mode == "yes":
         interactive_menu(input_file, output_file)
     else:
-        # Non-interactive: just process file and write output
         text = read_file(input_file)
         if text:
             results = process_text(text)
