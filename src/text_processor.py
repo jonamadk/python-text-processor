@@ -40,6 +40,7 @@ def write_results(results, output_file):
 
 def interactive_menu(input_file, output_file):
     """Interactive mode: show menu and prompt user for actions."""
+    
     while True:
         print("\n--- Text Processor Menu ---")
         print("1. View file contents")
@@ -114,7 +115,7 @@ def main(input_file="input.txt", output_file="output.txt"):
         print("No input stream available. Running in non-interactive mode.")
         mode = "no"
 
-    if mode == "yes":
+    if mode == "yes" and sys.stdin.isatty():
         interactive_menu(input_file, output_file)
     else:
         text = read_file(input_file)

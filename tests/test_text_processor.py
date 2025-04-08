@@ -1,6 +1,7 @@
 import sys
 import os
 import unittest
+from unittest.mock import patch
 
 # Add the src directory to the path so we can import the module
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -33,6 +34,15 @@ class TestTextProcessor(unittest.TestCase):
         # Clean up
         os.remove("test_input.txt")
         os.remove("test_output.txt")
+
+    def test_interactive_mode_check(self):
+        # Simulate interactive mode (isatty returns True)
+        with patch('sys.stdin.isatty', return_value=True):
+            self.assertTrue(sys.stdin.isatty(), "Expected interactive mode (isatty=True)")
+
+        # Simulate non-interactive mode (isatty returns False)
+        with patch('sys.stdin.isatty', return_value=False):
+            self.assertFalse(sys.stdin.isatty(), "Expected non-interactive mode (isatty=False)")
 
 if __name__ == "__main__":
     unittest.main()
