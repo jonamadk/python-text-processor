@@ -44,6 +44,8 @@ class TestTextProcessor(unittest.TestCase):
         # Simulate non-interactive mode (isatty returns False)
         with patch('sys.stdin.isatty', return_value=False):
             self.assertFalse(is_interactive(), "Expected non-interactive mode (isatty=False)")
+        #Test the system interactiveness
+        self.assertTrue(is_interactive(), "Expected interactive mode (isatty=True)")
 
 if __name__ == "__main__":
     unittest.main()
