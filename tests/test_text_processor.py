@@ -40,7 +40,7 @@ class TestTextProcessor(unittest.TestCase):
             self.assertFalse(is_interactive(), "Expected non-interactive mode (isatty=False)")
 
     @unittest.skipIf("CI" in os.environ or not sys.stdin.isatty(), "Not running in interactive terminal")
-    def test_is_interactive(self):
+    def test_actual_terminal_detection(self):
         self.assertTrue(is_interactive(), "Expected real interactive terminal")
 
 if __name__ == "__main__":
