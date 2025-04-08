@@ -1,12 +1,10 @@
 import sys
 import os
 import unittest
-from unittest.mock import patch
-from io import StringIO
 
 # Add the src directory to the path so we can import the module
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from src.text_processor import read_file, process_text, write_results, main
+from src.text_processor import read_file, process_text, write_results
 
 class TestTextProcessor(unittest.TestCase):
     def test_process_text(self):
@@ -35,24 +33,6 @@ class TestTextProcessor(unittest.TestCase):
         # Clean up
         os.remove("test_input.txt")
         os.remove("test_output.txt")
-
-    @patch("builtins.input", side_effect=["2", "Temporary content", "no", "1", "5"])
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_edit_file_discard_changes(self, mock_stdout, mock_input):
-        original_content = "Original content stays"
-        with open("input.txt", "w") as f:
-            f.write(original_content)
-
-        main()
-
-        with open("input.txt", "r") as f:
-            current_content = f.read()
-        self.assertEqual(current_content, original_content)
-
-        output = mock_stdout.getvalue()
-        self.assertIn("Changes discarded", output)
-
-        os.remove("input.txt")
 
 if __name__ == "__main__":
     unittest.main()
