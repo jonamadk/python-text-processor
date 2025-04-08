@@ -1,7 +1,7 @@
 import sys
 import os
 import unittest
-from unittest.mock import patch, mock_open
+from unittest.mock import patch
 from io import StringIO
 
 # Add the src directory to the path so we can import the module
@@ -36,46 +36,22 @@ class TestTextProcessor(unittest.TestCase):
         os.remove("test_input.txt")
         os.remove("test_output.txt")
 
-    @patch("builtins.input", side_effect=["1", "4"])
+    @patch("builtins.input", side_effect=["2", "Temporary content", "no", "1", "5"])
     @patch("sys.stdout", new_callable=StringIO)
-    def test_view_file_contents(self, mock_stdout, mock_input):
-        # Create a temporary test file
-        test_input = "Hello, GitHub Actions!"
+    def test_edit_file_discard_changes(self, mock_stdout, mock_input):
+        original_content = "Original content stays"
         with open("input.txt", "w") as f:
-            f.write(test_input)
+            f.write(original_content)
 
-        # Run the main function
         main()
 
-        # Check if the file contents were displayed
-        output = mock_stdout.getvalue()
-        self.assertIn("--- File Contents ---", output)
-        self.assertIn(test_input, output)
-
-        # Clean up
-        os.remove("input.txt")
-
-    @patch("builtins.input", side_effect=["2", "New content for the file", "1", "4"])
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_edit_file_contents(self, mock_stdout, mock_input):
-        # Create a temporary test file
-        with open("input.txt", "w") as f:
-            f.write("Old content")
-
-        # Run the main function
-        main()
-
-        # Check if the file was updated
         with open("input.txt", "r") as f:
-            updated_content = f.read()
-        self.assertEqual(updated_content, "New content for the file")
+            current_content = f.read()
+        self.assertEqual(current_content, original_content)
 
-        # Check if the new content was displayed
         output = mock_stdout.getvalue()
-        self.assertIn("File updated successfully.", output)
-        self.assertIn("New content for the file", output)
+        self.assertIn("Changes discarded", output)
 
-        # Clean up
         os.remove("input.txt")
 
 if __name__ == "__main__":

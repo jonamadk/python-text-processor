@@ -46,7 +46,8 @@ def main(input_file="input.txt", output_file="output.txt"):
         print("1. View file contents")
         print("2. Edit file contents")
         print("3. Process file")
-        print("4. Exit")
+        print("4. View output file")
+        print("5. Exit")
         choice = input("Enter your choice: ")
 
         if choice == "1":
@@ -62,12 +63,16 @@ def main(input_file="input.txt", output_file="output.txt"):
             # Edit file contents
             print("\n--- Edit File Contents ---")
             new_content = input("Enter new content for the file: ")
-            try:
-                with open(input_file, 'w') as file:
-                    file.write(new_content)
-                print("File updated successfully.")
-            except Exception as e:
-                print(f"Error updating file: {e}")
+            save = input("Do you want to save this content to the file? (yes/no): ").strip().lower()
+            if save == "yes":
+                try:
+                    with open(input_file, 'w') as file:
+                        file.write(new_content)
+                    print("File updated successfully.")
+                except Exception as e:
+                    print(f"Error updating file: {e}")
+            else:
+                print("Changes discarded. Original file content remains unchanged.")
 
         elif choice == "3":
             # Process file
@@ -86,6 +91,15 @@ def main(input_file="input.txt", output_file="output.txt"):
                 print("File is empty or could not be read.")
 
         elif choice == "4":
+            # View output file
+            text = read_file(output_file)
+            if text:
+                print("\n--- Output File Contents ---")
+                print(text)
+            else:
+                print("Output file is empty or could not be read.")
+
+        elif choice == "5":
             # Exit
             print("Exiting the application.")
             break
