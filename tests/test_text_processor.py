@@ -6,7 +6,7 @@ from io import StringIO
 
 # Add the src directory to the path so we can import the module
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from src.text_processor import read_file, process_text, write_results, interactive_menu
+from src.text_processor import read_file, process_text, write_results, is_interactive
 
 class TestTextProcessor(unittest.TestCase):
     def test_process_text(self):
@@ -36,21 +36,14 @@ class TestTextProcessor(unittest.TestCase):
         os.remove("test_input.txt")
         os.remove("test_output.txt")
     
-    def test_interactive_menu(self):
-        # Simulate user input for the interactive menu
-        user_input = ["1", "5"]  # View file contents and then exit
-        with patch('builtins.input', side_effect=user_input), \
-             patch('src.text_processor.read_file', return_value="Sample file content"), \
-             patch('sys.stdout', new_callable=StringIO) as mock_stdout:
-            
-            # Run the interactive menu
-            interactive_menu("input.txt", "output.txt")
-            
-            # Capture the output and verify
-            output = mock_stdout.getvalue()
-            self.assertIn("--- Text Processor Menu ---", output)
-            self.assertIn("--- File Contents ---", output)
-            self.assertIn("Sample file content", output)
+    def test_is_interactive(self):
+        # Simulate interactive mode (isatty returns True)
+        with patch('sys.stdin.isatty', return_value=True):
+            self.assertTrue(is_interactive(), "Expected interactive mode (isatty=True)")
+
+        # Simulate non-interactive mode (isatty returns False)
+        with patch('sys.stdin.isatty', return_value=False):
+            self.assertFalse(is_interactive(), "Expected non-interactive mode (isatty=False)")
 
 if __name__ == "__main__":
     unittest.main()

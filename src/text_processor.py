@@ -38,11 +38,14 @@ def write_results(results, output_file):
         print(f"Error writing to file: {e}")
         return False
 
+def is_interactive():
+    interactive_check = sys.stdin.isatty()
+    return interactive_check
+
 def interactive_menu(input_file, output_file):
     """Interactive mode: show menu and prompt user for actions."""
-    interactive_check = sys.stdin.isatty()
-    if interactive_check:
-        while True:
+    
+    while True:
             print("\n--- Text Processor Menu ---")
             print("1. View file contents")
             print("2. Edit file contents")
@@ -116,7 +119,7 @@ def main(input_file="input.txt", output_file="output.txt"):
         print("No input stream available. Running in non-interactive mode.")
         mode = "no"
 
-    if mode == "yes" and sys.stdin.isatty():
+    if mode == "yes" and is_interactive():
         interactive_menu(input_file, output_file)
     else:
         text = read_file(input_file)
