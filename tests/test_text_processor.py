@@ -16,36 +16,32 @@ class TestTextProcessor(unittest.TestCase):
         self.assertEqual(results["original_text"], "Hello, world!")
         self.assertEqual(results["word_count"], 2)
         self.assertEqual(results["uppercase_text"], "HELLO, WORLD!")
-        
+
     def test_read_write_files(self):
-        # Create a temporary test file
         test_input = "test input text"
         with open("test_input.txt", "w") as f:
             f.write(test_input)
-        
-        # Read the file
+
         text = read_file("test_input.txt")
         self.assertEqual(text, test_input)
-        
-        # Process and write results
+
         results = process_text(text)
         success = write_results(results, "test_output.txt")
         self.assertTrue(success)
-        
-        # Clean up
+
         os.remove("test_input.txt")
         os.remove("test_output.txt")
     
     def test_is_interactive(self):
-        # Simulate interactive mode (isatty returns True)
         with patch('sys.stdin.isatty', return_value=True):
             self.assertTrue(is_interactive(), "Expected interactive mode (isatty=True)")
 
-        # Simulate non-interactive mode (isatty returns False)
         with patch('sys.stdin.isatty', return_value=False):
             self.assertFalse(is_interactive(), "Expected non-interactive mode (isatty=False)")
-        #Test the system interactiveness
-        self.assertTrue(is_interactive(), "Expected interactive mode (isatty=True)")
+
+    @unittest.skipIf("CI" in os.environ or not sys.stdin.isatty(), "Not running in interactive terminal")
+    def test_is_interactive(self):
+        self.assertTrue(is_interactive(), "Expected real interactive terminal")
 
 if __name__ == "__main__":
     unittest.main()
