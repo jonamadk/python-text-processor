@@ -75,6 +75,9 @@ def interactive_menu(input_file, output_file):
                     print(f"Error updating file: {e}")
             else:
                 print("Changes discarded. Original file content remains unchanged.")
+                # Restore the original content
+                with open(input_file, 'w') as file:
+                    file.write(read_file(input_file))
 
         elif choice == "3":
             text = read_file(input_file)
