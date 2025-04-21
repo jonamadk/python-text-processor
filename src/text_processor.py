@@ -113,11 +113,7 @@ def interactive_menu(input_file, output_file):
 
 def main(input_file="input.txt", output_file="output.txt"):
     """Main function to run in interactive or non-interactive mode."""
-    # try:
-    #     mode = input("Do you want to run in interactive mode? (yes/no): ").strip().lower()
-    # except EOFError:
-        # print("No input stream available. Running in non-interactive mode.")
-        # mode = "no"
+  
 
     if  is_interactive():
         print("Running in interactive mode.")
